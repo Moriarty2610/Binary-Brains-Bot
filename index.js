@@ -1,29 +1,40 @@
-const Discord = require("Discord.js")
-const fetch = require("node-fetch")
-const client = new Discord.client()
+require('dotenv').config()
+const fs = require('node:fs');
+const path = require('node:path');
+const { Client, Collection, GatewayIntentBits, InteractionType } = require('discord.js');
+const token = process.env.token
 
-client.on("ready", () => {
-    console.log('Logged in as ${client.user.tag}!')   
-})
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-client.on("message" , msg => {
-    if (msg.auther.bot) return
-    let message = msg.content
-    if (message[0] != '$') return
-    let part1 = ""
-    let i = 1 ;
-    while(message[i]!=' '){
-        part1 += message[i]
-        i++
+// load commands
+client.commands = new Collection();
+const commandsPath = path.join(__dirname, 'commands');
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+for (const file of commandFiles) {
+  const filePath = path.join(commandsPath, file);
+  const command = require(filePath);
+  client.commands.set(command.data.name, command);
+}
+
+client.once('ready', () => {
+  console.log('Ready!');
+});
+
+client.on('interactionCreate', async interaction => {
+  if (interaction.isChatInputCommand()) {
+
+    const command = client.commands.get(interaction.commandName);
+
+    if (!command) return;
+
+    try {
+      await command.execute(interaction);
+    } catch (error) {
+      console.error(error);
+      await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
     }
-    i++
-    let uname = ""
-    while(message[i]!=' '){
-        uname += message[i]
-    }
-    i++
+  }
 
-    //if(part1 === 'login')  
-})
+});
 
-client.login() //TOKEN
+client.login(token);
