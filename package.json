@@ -12,7 +12,8 @@
 		"nodemon": "^2.0.19"
 	},
 	"scripts": {
+		"build": "node deploy-commands.js",
 		"dev": "npx nodemon .",
-		"build": "node deploy-commands.js"
+        "start": "node ."
 	}
 }
