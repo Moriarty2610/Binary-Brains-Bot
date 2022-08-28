@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
 const jwt = require('jsonwebtoken');
-const { sendConfirmationEmail } = require('../utils/sendToken');
+const { checkEmail } = require('../utils/db');
+const { sendConfirmationEmail } = require('../utils/sendmail');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -12,15 +13,25 @@ module.exports = {
     const email = interaction.options.getString('email');
     const user = interaction.user.tag;
 
+    let isValidEmail = await checkEmail(email);
+
+    if(!isValidEmail){
+      interaction.reply({
+        content : "Email not registered",
+        ephemeral : true
+      });
+      return
+    }
+
     // add extra data in token
-    const token = jwt.sign({ email: email, user: user }, process.env.JWT_SECRET_KEY,  { expiresIn: '15m' });
+    const token = jwt.sign({ email: email, user: user }, process.env.BOT_JWT_SECRET_KEY,  { expiresIn: '15m' });
 
-    console.log(token)
+    console.log("token: ",token)
 
-    sendConfirmationEmail(user, email, token);
+    sendConfirmationEmail(user, email, token, isValidEmail.name);
 
     await interaction.reply({
-      content: `Kindly verify using the token sent to \`${email}\`\nUse \`/help\` for more info`,
+      content: `Kindly verify using the token sent to \`${email}\`\nUse \`/bbhelp\` for more info`,
       ephemeral: true
     });
   },

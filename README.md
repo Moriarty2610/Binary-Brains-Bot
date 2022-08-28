@@ -18,9 +18,10 @@ $ npm run dev
 
 ### To-Do
 - [x] create commands
-- [ ] send token via email
-- [ ] add verified users to the database
+- [x] send token via email
+- [x] add verified users to the database
 - [ ] assign roles to verified user
+- [ ] add `/bbhelp` command
 
 
 ### [Discord.JS Docs](https://discordjs.guide/creating-your-bot/)
