@@ -23,12 +23,11 @@ module.exports = {
       return
     }
 
-    // add extra data in token
     const token = jwt.sign({ email: email, user: user }, process.env.BOT_JWT_SECRET_KEY,  { expiresIn: '15m' });
 
     console.log("token: ",token)
 
-    sendConfirmationEmail(user, email, token, isValidEmail.name);
+    // sendConfirmationEmail(user, email, token, isValidEmail.name);
 
     await interaction.reply({
       content: `Kindly verify using the token sent to \`${email}\`\nUse \`/bbhelp\` for more info`,

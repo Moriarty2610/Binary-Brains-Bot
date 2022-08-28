@@ -21,11 +21,12 @@ module.exports = {
 
     if (!userRole) {
       interaction.reply("Error : Cannot find user role")
+      return  
     }
 
     let addRole = interaction.guild.roles.cache.find(role => role.name === userRole);
-    interaction.member.roles.add(addRole);
+    let verifiedRole = interaction.guild.roles.cache.find(role => role.name === 'Verified')
+    interaction.member.roles.add([addRole, verifiedRole]);
     interaction.reply("Token verification successful")
-
   },
 };

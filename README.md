@@ -8,7 +8,10 @@ $ npm i
 
 ### Deploy Bot 
 ```bash
-$ node deploy-commands.js #run only once
+# run only once
+$ node deploy-commands.js 
+# Alternatively
+$ npm run build
 ```
 
 ### Run Bot
@@ -20,8 +23,8 @@ $ npm run dev
 - [x] create commands
 - [x] send token via email
 - [x] add verified users to the database
-- [ ] assign roles to verified user
-- [ ] add `/bbhelp` command
+- [x] assign roles to verified user
+- [x] add `/bbhelp` command
 
 
 ### [Discord.JS Docs](https://discordjs.guide/creating-your-bot/)
