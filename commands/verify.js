@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const { checkEmail } = require('../utils/db');
 const { SlashCommandBuilder } = require('discord.js');
 const { sendConfirmationEmail } = require('../utils/sendmail');
-const { verifyChannelId } = require('../config');
+const { verifyChannelId, jwtTokenLife } = require('../config');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -29,7 +29,7 @@ module.exports = {
       return
     }
 
-    const token = jwt.sign({ email: email, user: user }, process.env.BOT_JWT_SECRET_KEY, { expiresIn: '15m' });
+    const token = jwt.sign({ email: email, user: user }, process.env.BOT_JWT_SECRET_KEY, { expiresIn: jwtTokenLife });
 
     sendConfirmationEmail(user, email, token, isValidEmail.name);
 
