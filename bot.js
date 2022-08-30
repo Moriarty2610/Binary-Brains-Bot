@@ -20,6 +20,10 @@ client.once('ready', () => {
   console.log('Ready!');
 });
 
+client.on("guildMemberAdd", member => {
+    member.send("Welcome to the server!").catch(console.error); // DMs new user
+});
+
 client.on('interactionCreate', async interaction => {
   if (interaction.isChatInputCommand()) {
 
