@@ -1,6 +1,7 @@
-const { SlashCommandBuilder, ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, InteractionResponse } = require('discord.js');
 const jwt = require('jsonwebtoken');
-const {addUserDiscord} = require("../utils/db")
+const { addUserDiscord } = require("../utils/db")
+const { SlashCommandBuilder } = require('discord.js');
+const { verifiedRoleName, verifyChannelId } = require('../config');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -9,6 +10,11 @@ module.exports = {
     .addStringOption(option => option.setName('token').setDescription('Enter your token')),
 
   async execute(interaction) {
+    if (interaction.channelId !== verifyChannelId) {
+      await interaction.reply("command not found in this channel")
+      return;
+    }
+
     const token = interaction.options.getString('token')
     let decoded = jwt.verify(token, process.env.BOT_JWT_SECRET_KEY)
     verified = (decoded.user === interaction.user.tag)
@@ -20,13 +26,13 @@ module.exports = {
     let userRole = await addUserDiscord(decoded.email, decoded.user);
 
     if (!userRole) {
-      interaction.reply("Error : Cannot find user role")
-      return  
+      await interaction.reply("Error : Cannot find user role")
+      return
     }
 
-    let addRole = interaction.guild.roles.cache.find(role => role.name === userRole);
-    let verifiedRole = interaction.guild.roles.cache.find(role => role.name === 'Verified')
-    interaction.member.roles.add([addRole, verifiedRole]);
-    interaction.reply("Token verification successful")
+    let addRoles = interaction.guild.roles.cache.filter(role => role.name === userRole || role.name === verifiedRoleName);
+    // let verifiedRole = interaction.guild.roles.cache.find(role => role.name === verifiedRoleName)
+    await interaction.member.roles.add(addRoles);
+    await interaction.reply("Token verification successful")
   },
 };

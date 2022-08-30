@@ -25,8 +25,8 @@ $ npm run dev
 - [x] add verified users to the database
 - [x] assign roles to verified user
 - [x] add `/bbhelp` command
-- [ ] add `/query` command to spit the verified `email-id` associated with the user (only for admins)
-- [ ] add `on-member-join` event which DMs user to verify his account 
+- [x] add `/query` command to spit the verified `email-id` associated with the user (only for admins)
+- [x] add `on-member-join` event which DMs user to verify his account 
 
 
 ### [Discord.JS Docs](https://discordjs.guide/creating-your-bot/)

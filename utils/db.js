@@ -7,19 +7,16 @@ module.exports = {
   async addUserDiscord(email, tag) {
     await mongoose.connect(connectionurl);
     let user = await User.findOne({ email: email });
-    
-    await mongoose.connection.close()
-    console.log("user is : ",user);
-    
-      if (!user) {
-        return null;
-      }
-      
-      user.discordId = tag;
-      user.save();
 
-      console.log(user.difficulty)
-      return user.difficulty;
+    if (!user) {
+      await mongoose.connection.close()
+      return null;
+    }
+
+    user.discordId = tag;
+    user.save();
+    await mongoose.connection.close()
+    return user.difficulty;
   },
 
   async checkEmail(email) {
@@ -28,5 +25,13 @@ module.exports = {
     console.log('user is: ', user)
     await mongoose.connection.close()
     return user;
+  },
+
+  async getUserDetails(tag) {
+    await mongoose.connect(connectionurl);
+    let user = await User.find({discordId : tag});
+    await mongoose.connection.close();
+    return user.length>0 ? user[0] : null;
   }
+
 };

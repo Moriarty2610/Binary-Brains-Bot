@@ -6,6 +6,6 @@ module.exports = {
     .setDescription('Manual'),
 
   async execute(interaction) {
-    await interaction.reply(`Commands:\nToken command usage: \`token <token>\` \nVerify command usage: \`verify <institute_email_id>\` \n`);
+    await interaction.reply(`Commands:\nToken command usage: \`/token <token>\` \nVerify command usage: \`/verify <institute_email_id>\` \n`);
   },
 };

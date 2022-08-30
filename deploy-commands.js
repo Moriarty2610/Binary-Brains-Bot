@@ -3,7 +3,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { Routes } = require('discord.js');
 const { REST } = require('@discordjs/rest');
-const { BOT_CLIENT_ID, BOT_GUILD_ID, BOT_TOKEN } = process.env;
+const { clientId, guildId } = require('./config');
+const { BOT_TOKEN } = process.env;
 
 const commands = [];
 const commandsPath = path.join(__dirname, 'commands');
@@ -16,6 +17,6 @@ for (const file of commandFiles) {
 
 const rest = new REST({ version: '10' }).setToken(BOT_TOKEN);
 
-rest.put(Routes.applicationGuildCommands(BOT_CLIENT_ID, BOT_GUILD_ID), { body: commands })
+rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
   .then(() => console.log('Successfully registered application commands.'))
   .catch(console.error);

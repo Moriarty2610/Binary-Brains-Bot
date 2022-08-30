@@ -1,5 +1,5 @@
 {
-	"main": "index.js",
+	"main": "bot.js",
 	"dependencies": {
 		"discord.js": "^14.3.0",
 		"dotenv": "^16.0.1",

@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer");
+const { discordServerName } = require("../config");
 const user = process.env.EMAIL;
 
 const transport = nodemailer.createTransport({
@@ -20,7 +21,7 @@ module.exports = {
             	<h1>Email Verification</h1>
             	<h2>Hello ${name}</h2>
             	<p>
-            		Thank you for joining Binary Brains Discord Server. Please confirm your
+            		Thank you for joining ${discordServerName} Discord Server. Please confirm your
             		Discord Id <b>${tag}</b> by verifying with following token :
             	</p>
             	<code>${token}</code>

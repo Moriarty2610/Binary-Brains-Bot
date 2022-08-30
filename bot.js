@@ -1,9 +1,9 @@
 require('dotenv').config()
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, Collection, GatewayIntentBits, InteractionType } = require('discord.js');
+const { Client, Collection, GatewayIntentBits, channelMention } = require('discord.js');
 const token = process.env.BOT_TOKEN
-
+const { discordServerName, verifyChannelId } = require('./config');
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 // load commands
@@ -21,7 +21,7 @@ client.once('ready', () => {
 });
 
 client.on("guildMemberAdd", member => {
-    member.send("Welcome to the server!").catch(console.error); // DMs new user
+    member.send(`Welcome to the ${discordServerName} server!\nPlease verify with your email in ${channelMention(verifyChannelId)} to gain channel access`).catch(console.error); // DMs new user
 });
 
 client.on('interactionCreate', async interaction => {
