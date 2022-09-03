@@ -12,7 +12,6 @@ const transport = nodemailer.createTransport({
 
 module.exports = {
   sendConfirmationEmail(tag, email, token, name) {
-    console.log("Check");
     transport.sendMail({
       from: user,
       to: email,

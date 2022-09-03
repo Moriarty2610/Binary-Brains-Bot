@@ -2,17 +2,31 @@ const jwt = require('jsonwebtoken');
 const { checkEmail } = require('../utils/db');
 const { SlashCommandBuilder } = require('discord.js');
 const { sendConfirmationEmail } = require('../utils/sendmail');
-const { verifyChannelId, jwtTokenLife } = require('../config');
+const { verifyChannelId, jwtTokenLife, verifiedRoleName } = require('../config');
+const { hasRole } = require('../utils/discord');
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('verify')
     .setDescription('Verify with email!')
-    .addStringOption(option => option.setName('email').setDescription('Enter your email')),
+    .addStringOption(option =>
+      option
+        .setName('email')
+        .setDescription('Enter your email')
+        .setRequired(true)
+    ),
 
   async execute(interaction) {
+    await interaction.deferReply();
+
     if (interaction.channelId !== verifyChannelId) {
-      await interaction.reply("command not found in this channel")
+      await interaction.editReply("command not found in this channel")
+      return;
+    }
+
+    const members = await interaction.guild.members.cache;
+    if (hasRole(members, interaction.user.id, verifiedRoleName)) {
+      await interaction.editReply("User already verified");
       return;
     }
 
@@ -22,7 +36,7 @@ module.exports = {
     let isValidEmail = await checkEmail(email);
 
     if (!isValidEmail) {
-      await interaction.reply({
+      await interaction.editReply({
         content: "Email not registered",
         ephemeral: true
       });
@@ -33,7 +47,7 @@ module.exports = {
 
     sendConfirmationEmail(user, email, token, isValidEmail.name);
 
-    await interaction.reply({
+    await interaction.editReply({
       content: `Kindly verify using the token sent to \`${email}\`\nUse \`/bbhelp\` for more info`,
       ephemeral: true
     });
